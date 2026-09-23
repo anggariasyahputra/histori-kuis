@@ -22,23 +22,17 @@ COPY backend .
 
 # Install Composer dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-RUN composer install --no-cache --optimize-autoloader --no-dev && \
-    php artisan config:clear && \
-    php artisan event:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    rm -f storage/logs/laravel.log && \
-    rm -rf storage/framework/sessions/* && \
-    php artisan optimize && \
-    rm /usr/local/bin/composer
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs storage/uploads \
+    && composer install --no-cache --optimize-autoloader --no-dev \
+    && rm /usr/local/bin/composer
 
 # Copy the built frontend assets to the Laravel public directory
 COPY --from=node-builder /app/dist /var/www/college-quiz-app/public
 COPY --from=node-builder /app/dist/index.html /var/www/college-quiz-app/resources/views/index.blade.php
 
 # Grant permissions
-RUN chown -R www-data:www-data /var/www/college-quiz-app/storage /var/www/college-quiz-app/bootstrap/cache
-RUN chown -R 775 /var/www/college-quiz-app/storage/logs
+RUN chown -R www-data:www-data /var/www/college-quiz-app/storage /var/www/college-quiz-app/bootstrap/cache \
+    && chmod -R 775 /var/www/college-quiz-app/storage /var/www/college-quiz-app/bootstrap/cache
 
 # Handle uploads
 RUN mkdir -p /var/www/college-quiz-app/storage/uploads && \
