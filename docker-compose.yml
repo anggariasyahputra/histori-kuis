@@ -1,0 +1,38 @@
+name: college-quiz-app
+services:
+    nginx-server:
+        build: .
+        ports:
+            - "80:80"
+        restart: unless-stopped
+        depends_on:
+            - mariadb
+            - redis
+        volumes:
+            - "./backend/storage/logs:/var/www/college-quiz-app/storage/logs"
+            - "./backend/storage/uploads:/var/www/college-quiz-app/storage/uploads"
+            - "./docker/nginx/logs:/var/log/nginx"
+
+    redis:
+        image: redis:7.4.2-alpine
+        privileged: true
+        command: [ "sh", "-c", "sysctl vm.overcommit_memory=1 && redis-server" ]
+        ports:
+            - "6379:6379"
+        restart: unless-stopped
+        volumes:
+            - "./redis-data:/data"
+
+    mariadb:
+        image: mariadb:10.11
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: password123
+            MYSQL_DATABASE: historikuis
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: password123
+        volumes:
+            - ./mariadb-data:/var/lib/mysql
+            - ./historikuis1.sql:/docker-entrypoint-initdb.d/init.sql:ro
+        ports:
+            - "3306:3306"

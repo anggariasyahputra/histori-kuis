@@ -1,0 +1,52 @@
+.article {
+    max-width: 1000px;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background-color: white;
+    /* border-bottom: 1px solid var(--color-gray); */
+}
+
+.actionItems {
+    display: flex;
+    gap: 10px;
+}
+
+.inputItem {
+    height: 40px;
+    width: 300px;
+}
+
+.buttonItem {
+    height: 40px;
+    width: 80px;
+}
+
+.sessionsList>li {
+    list-style-type: none;
+    border: 1px solid var(--color-gray);
+    border-radius: var(--border-radius-low);
+    /* background-color: var(--color-white); */
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.currentSession {
+    color: var(--color-soft-green);
+}
+
+.appSettingList>li {
+    list-style-type: none;
+    /* background-color: var(--color-white); */
+    margin-bottom: 20px;
+}
+
+@media (width<=800px) {
+    .inputItem {
+        width: 100%;
+    }
+}

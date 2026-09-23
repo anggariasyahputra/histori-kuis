@@ -1,0 +1,17 @@
+export default {
+    shortcode: 'Kode',
+    teacher: 'Guru',
+    subject: 'Mata pelajaran',
+    name: 'Nama',
+    save: 'Simpan',
+    delete: 'Hapus',
+    deleteMessage: 'Apakah Anda yakin ingin menghapus kursus ini? Tindakan ini tidak dapat dibatalkan.',
+    langYes: 'Ya',
+    langNo: 'Tidak',
+    studentList: 'Daftar siswa',
+    examtList: 'Daftar quiz',
+    edit: 'Edit',
+    add: 'Tambah',
+    numberOfQuesions: '@number pertanyaan',
+    minutes: '@number menit',
+};

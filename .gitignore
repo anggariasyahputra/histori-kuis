@@ -1,0 +1,6 @@
+.DS_Store
+*/.DS_Store
+mariadb-data/
+redis-data/
+backend/storage/logs/*.log
+frontend/dist/

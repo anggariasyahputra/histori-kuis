@@ -1,0 +1,16 @@
+export default {
+    forgotPassword: 'Lupa kata sandi',
+    emailSentTo: 'Kami baru saja mengirim kode pemulihan ke',
+    enterEmail: 'Silakan masukkan email di sini',
+    enterRecoveryCode: 'Silakan masukkan kode pemulihan di sini',
+    enterNewPassword: 'Masukkan kata sandi baru di sini',
+    email: 'Email',
+    recoveryCode: 'Kode pemulihan',
+    password: 'Kata sandi',
+    confirmPassword: 'Konfirmasi kata sandi',
+    sendCode: 'Kirim kode verifikasi',
+    verify: 'Verifikasi',
+    save: 'Simpan',
+    didNotReceiveEmail: 'Belum menerima email?',
+    resend: 'Kirim ulang',
+};

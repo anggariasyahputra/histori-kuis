@@ -1,0 +1,33 @@
+export default {
+    exam: 'Quiz',
+    name: 'Nama',
+    examDate: 'Tanggal quiz',
+    examTime: 'Waktu',
+    totalQuestions: 'Total pertanyaan',
+    questions: 'Pertanyaan',
+    supervisors: 'Pengawas',
+    langYes: 'Ya',
+    langNo: 'Tidak',
+    startMessage: 'Mulai quiz sekarang?',
+    cancelMessage: 'Batalkan quiz sekarang?',
+    startExam: 'Mulai quiz',
+    cancelExam: 'Batalkan quiz',
+    doExam: 'Kerjakan quiz',
+    result: 'Hasil',
+    refresh: 'Muat ulang',
+    schoolClass: 'Kelas',
+    genders: {
+        male: 'Laki-laki',
+        female: 'Perempuan',
+        gender: 'Jenis kelamin'
+    },
+    score: 'Nilai',
+    didNotSubmitted: 'Belum dikumpulkan',
+    export: 'Ekspor',
+    submittedAt: 'Waktu pengumpulan',
+    remarked: 'Ditinjau ulang',
+    cancelled: 'Dibatalkan',
+    yes: 'Ya',
+    no: 'Tidak',
+    detail: 'Detail'
+};

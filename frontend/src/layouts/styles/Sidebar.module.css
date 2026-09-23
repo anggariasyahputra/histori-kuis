@@ -1,0 +1,152 @@
+.sidebar {
+    width: 230px;
+    flex: 0 0 230px;
+    height: 100%;
+    background: linear-gradient(180deg, #101d45 0%, #172b61 62%, #102044 100%);
+    overflow-x: hidden;
+    overflow-y: hidden;
+    transition: margin-left var(--transition-timing-medium);
+    z-index: 10;
+    scrollbar-gutter: stable;
+    border-right: 1px solid rgba(255, 255, 255, .12);
+    box-shadow: 12px 0 28px rgba(15, 23, 42, .12);
+    will-change: margin-left;
+}
+
+.brandBlock { display: flex; align-items: center; gap: 10px; padding: 22px 20px 16px; color: #fff; }
+.brandMascot { width: 42px; height: 42px; display: block; object-fit: contain; border: 3px solid #fbbf24; border-radius: 13px; background: #fbbf24; box-shadow: 0 0 0 5px rgba(251, 191, 36, .14), 0 8px 18px rgba(0, 0, 0, .2); animation: mascot-float 3.5s ease-in-out infinite; }
+.brandBlock strong { display: block; font-size: 18px; letter-spacing: -.3px; }
+.brandBlock small { display: block; margin-top: 3px; color: #bfdbfe; font-size: 8px; font-weight: 800; letter-spacing: 1.2px; }
+.playerCard { display: flex; align-items: center; gap: 10px; margin: 4px 14px 18px; padding: 11px 10px; border: 1px solid rgba(251, 191, 36, .38); border-radius: 14px; background: linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .05)); box-shadow: inset 0 1px rgba(255, 255, 255, .1); transition: transform .25s ease, border-color .25s ease, background .25s ease; }
+.playerCard:hover { transform: translateY(-2px); border-color: #fbbf24; background: linear-gradient(135deg, rgba(251, 191, 36, .2), rgba(255, 255, 255, .08)); }
+.playerAvatar { width: 36px; height: 36px; display: grid; place-items: center; flex: 0 0 auto; border: 2px solid #fbbf24; border-radius: 50%; color: #172554; background: #fef3c7; font-weight: 900; }
+.playerInfo { min-width: 0; }
+.playerInfo strong { display: block; overflow: hidden; color: #fff; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.playerInfo span { display: flex; align-items: center; gap: 5px; margin-top: 3px; color: #fde68a; font-size: 10px; }
+.playerInfo i { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 7px #4ade80; }
+
+.sidebar:hover {
+    overflow-y: auto;
+}
+
+.hide {
+    margin-left: -230px;
+}
+
+.list {
+    width: 100%;
+    height: fit-content;
+    /* height: 100%; */
+}
+
+.listItem {
+    list-style-type: none;
+    width: 90%;
+    height: 50px;
+    cursor: pointer;
+    transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
+    border-radius: var(--border-radius-low);
+    position: relative;
+    margin: 5px auto;
+}
+
+.listItem:hover {
+    background-color: rgba(255, 255, 255, .1);
+    transform: translateX(4px);
+}
+
+.listItem::before {
+    content: '';
+    height: 100%;
+    width: 5px;
+    background-color: var(--color-primary);
+    position: absolute;
+    left: -20px;
+    transition: var(--transition-timing-fast);
+}
+
+.current {
+    background: linear-gradient(90deg, #fbbf24, #fcd34d);
+    font-weight: bold;
+    box-shadow: 0 8px 18px rgba(251, 191, 36, .2);
+}
+
+.current::before {
+    content: '';
+    height: 100%;
+    width: 5px;
+    background-color: var(--color-primary);
+    position: absolute;
+    translate: 20px 0px;
+    transition: var(--transition-timing-fast);
+}
+
+.listItem>a {
+    width: 100%;
+    height: 100%;
+    padding-left: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #dbeafe;
+}
+
+.listItem>a>svg {
+    font-size: 24px;
+    color: #93c5fd;
+    transition: color .25s ease, transform .25s ease;
+}
+
+.listItem:hover>a>svg {
+    color: #fcd34d;
+    transform: scale(1.08);
+}
+
+.current>a,
+.current>a>svg {
+    color: #172554;
+}
+
+.footer {
+    border-top: 1px solid rgba(255, 255, 255, .12);
+}
+
+.links {
+    padding: 10px 20px 20px 20px;
+    font-size: small;
+    font-weight: 500;
+}
+
+.links>span {
+    margin-right: 5px;
+    display: inline-block;
+    color: #bfdbfe;
+}
+
+.appInfos {
+    padding: 0px 0px 20px 20px;
+    color: #93a9d0;
+}
+
+@keyframes mascot-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+@media (width<=800px) {
+    .sidebar {
+        position: fixed;
+        flex: none;
+        height: calc(100% - 75px);
+        overflow-y: auto;
+    }
+
+    .list {
+        width: 100%;
+        scrollbar-gutter: stable;
+    }
+
+    .list:hover {
+        overflow: auto;
+    }
+}

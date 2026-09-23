@@ -1,0 +1,87 @@
+.textareaGroup {
+    flex: 0 0 calc(50% - 5px) !important;
+    height: fit-content;
+}
+
+.wrapLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.answerChoice {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #334155;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.answerChoice input {
+    width: 18px;
+    height: 18px;
+    accent-color: #1e3a8a;
+}
+
+.correctOption {
+    padding: 12px;
+    border: 2px solid #22c55e;
+    border-radius: 10px;
+    background: #f0fdf4;
+}
+
+.correctLabel {
+    color: #15803d;
+    font-size: 12px;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.questionInputs {
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.questionInputs > * {
+    width: 100%;
+    flex: 0 0 100% !important;
+}
+
+.questionInputs > .wrapItem:not(.textarea) {
+    height: auto;
+    min-height: 72px;
+}
+
+.questionActionBar {
+    flex: 0 0 100%;
+    margin-top: 0;
+}
+
+.questionInputs > .textareaGroup {
+    min-width: 0;
+    margin-top: 2px;
+}
+
+.questionInputs > .textarea > div,
+.questionInputs > .textareaGroup > div {
+    margin: 0;
+    box-shadow: none;
+}
+
+.questionInputs small {
+    display: block;
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 11px;
+}
+
+@media (width <= 800px) {
+    .questionInputs > .textareaGroup {
+        flex: 0 0 100% !important;
+    }
+}

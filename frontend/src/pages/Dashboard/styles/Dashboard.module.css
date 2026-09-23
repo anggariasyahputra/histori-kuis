@@ -1,0 +1,161 @@
+.dashboard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.hero {
+    min-height: 230px;
+    margin-bottom: 24px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px minmax(220px, 280px);
+    gap: 24px;
+    align-items: center;
+    color: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(115deg, #172554 0%, #1e3a8a 58%, #0f766e 100%);
+    box-shadow: 0 14px 30px rgba(23, 37, 84, .2);
+}
+
+.hero::after { content: ''; position: absolute; width: 240px; height: 240px; right: 18%; top: -130px; border: 30px solid rgba(255,255,255,.08); border-radius: 50%; }
+.heroCopy, .levelOrb, .xpBlock { position: relative; z-index: 1; }
+.eyebrow { display: flex; align-items: center; gap: 7px; color: #fcd34d; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.hero h1 { max-width: 580px; margin: 10px 0 8px; font-size: clamp(25px, 3vw, 40px); line-height: 1.08; }
+.hero p { max-width: 500px; color: #dbeafe; line-height: 1.5; }
+.heroActions { display: flex; gap: 16px; align-items: center; margin-top: 20px; flex-wrap: wrap; }
+.primaryAction { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: #fbbf24; color: #172554; font-weight: 800; }
+.streak { display: inline-flex; align-items: center; gap: 6px; color: #fde68a; font-size: 13px; font-weight: 700; }
+.levelOrb { width: 128px; height: 128px; display: grid; place-items: center; border: 8px solid #fbbf24; border-radius: 50%; background: #1d4ed8; box-shadow: 0 0 0 8px rgba(251,191,36,.14); }
+.orbInner { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.orbInner span { font-size: 10px; color: #bfdbfe; letter-spacing: 1px; }
+.orbInner strong { margin-top: 5px; font-size: 44px; }
+.orbBadge { position: absolute; right: -10px; bottom: 2px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: #f59e0b; font-size: 18px; }
+.xpBlock { align-self: end; padding: 18px; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(15, 23, 42, .25); }
+.xpLabel { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; color: #bfdbfe; }
+.xpLabel strong { color: #fff; }
+.xpTrack { height: 9px; margin: 12px 0 8px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.2); }
+.xpTrack div { height: 100%; border-radius: inherit; background: #fbbf24; transition: width .5s ease; }
+.xpBlock small { color: #dbeafe; font-size: 11px; }
+
+.wrapDashboardItem {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    /* padding-top: 10px; */
+}
+
+.section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(30, 41, 59, .07);
+}
+
+.wrapSections {
+    width: 100%;
+    margin-top: 20px;
+    /* padding-left: 10px;
+    padding-right: 10px; */
+    display: flex;
+    gap: 16px;
+    height: 350px;
+}
+
+.wrapSections>section:nth-child(1) {
+    min-width: 40%;
+    min-height: 100%;
+}
+
+.wrapSections>section:nth-child(2) {
+    min-width: calc(60% - 10px);
+    min-height: 100%;
+}
+
+.sectionTitle {
+    font-size: large !important;
+    color: #172554;
+}
+
+.leaderboardSection { flex: 1; min-width: 320px; }
+.badgeSection { flex: 1; min-width: 320px; max-width: 420px; }
+.wrapSections:has(.badgeSection) { justify-content: flex-start; }
+.guideIntro { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.guideAvatar { width: 72px; height: 72px; display: block; object-fit: contain; flex: 0 0 auto; border-radius: 14px; background: #fef3c7; }
+.guideText { font-size: 13px; line-height: 1.5; color: #475569; }
+.guideText b { color: #172554; }
+.guideButton { margin-bottom: 14px; border: 0; border-radius: 7px; padding: 8px 12px; color: #172554; background: #fde68a; font-weight: 700; cursor: pointer; }
+.badgeTableWrap { overflow-x: auto; }
+.badgeTable { width: 100%; border-collapse: collapse; font-size: 12px; }
+.badgeTable th { padding: 8px 4px; color: #64748b; text-align: left; border-bottom: 1px solid #e2e8f0; }
+.badgeTable td { padding: 8px 4px; color: #334155; border-bottom: 1px solid #f1f5f9; }
+
+.todayExamsList {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    animation: animate-today-exams var(--transition-timing-slow) ease;
+    list-style-type: none;
+}
+
+.todayExamsItem {
+    width: 100%;
+    min-height: 50px;
+    max-height: 50px;
+    border-radius: var(--border-radius-low);
+    border: 1px solid var(--color-shadow);
+    border-left: 5px solid var(--color-primary);
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.todayExamsItem>a {
+    width: 100%;
+    height: 100%;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (width<=800px) {
+    .hero { grid-template-columns: 1fr 100px; padding: 22px; }
+    .heroCopy { grid-column: 1 / -1; }
+    .levelOrb { width: 96px; height: 96px; border-width: 6px; }
+    .orbInner strong { font-size: 34px; }
+    .xpBlock { grid-column: 1 / -1; }
+    .wrapSections {
+        height: 700px;
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    .wrapSections>section:nth-child(1) {
+        min-width: 100%;
+        min-height: 50%;
+    }
+
+    .wrapSections>section:nth-child(2) {
+        min-width: 100%;
+        min-height: 50%;
+    }
+}
+
+@keyframes animate-today-exams {
+    0% {
+        gap: 0px;
+    }
+
+    100% {
+        gap: 15px;
+    }
+}

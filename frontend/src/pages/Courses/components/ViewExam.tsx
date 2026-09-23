@@ -1,0 +1,308 @@
+import appStyles from '~styles/App.module.css';
+import styles from '../styles/CreateViewExam.module.css';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { FiSave } from 'react-icons/fi';
+import { MdDeleteOutline } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import { Link } from 'react-router';
+import { apiDeleteExam, apiGetExamById, apiUpdateExam } from '~api/exam';
+import { apiSearchUsers } from '~api/user';
+import Loading from '~components/Loading';
+import YesNoPopUp from '~components/YesNoPopUp';
+import { AUTO_COMPLETE_DEBOUNCE } from '~config/env';
+import QUERY_KEYS from '~constants/query-keys';
+import useAppContext from '~hooks/useAppContext';
+import useDebounce from '~hooks/useDebounce';
+import useLanguage from '~hooks/useLanguage';
+import { User } from '~models/user';
+import createFormUtils from '~utils/create-form-utils';
+import css from '~utils/css';
+import dateFormat from '~utils/date-format';
+import languageUtils from '~utils/language-utils';
+
+type ViewExamProps = {
+    id: number;
+    onMutateSuccess: () => void;
+    setShowPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export default function ViewExam({
+    id,
+    onMutateSuccess,
+    setShowPopUp
+}: ViewExamProps) {
+    const { permissions } = useAppContext();
+    const [supervisors, setSupervisors] = useState<User[]>([]);
+    const [queryUser, setQueryUser] = useState('');
+    const [showDeletePopUp, setShowDeletePopUp] = useState(false);
+    const debounceQueryUser = useDebounce(queryUser, AUTO_COMPLETE_DEBOUNCE);
+    const language = useLanguage('component.view_exam');
+    const queryClient = useQueryClient();
+    const handleClosePopUp = () => {
+        setShowPopUp(false);
+    };
+    const disabledUpdate = !permissions.has('exam_update');
+    const formUtils = createFormUtils(styles);
+    const queryData = useQuery({
+        queryKey: [QUERY_KEYS.EXAM, { id: id }],
+        queryFn: () => apiGetExamById(id),
+    });
+    const userQueryData = useQuery({
+        queryKey: [QUERY_KEYS.ALL_TEACHER, { search: debounceQueryUser }],
+        queryFn: () => apiSearchUsers('teacher', debounceQueryUser),
+        enabled: permissions.has('user_view') ? true : false
+    });
+    const handleUpdateExam = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        document.querySelector(`.${styles.formData}`)?.querySelectorAll<HTMLInputElement>('input[name]').forEach(node => {
+            node.classList.remove('error');
+            formUtils.getParentElement(node)?.removeAttribute('data-error');
+        });
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        supervisors.forEach(supervisor => {
+            formData.append('supervisor_ids[]', String(supervisor.id));
+        });
+        await apiUpdateExam(formData, id);
+        handleClosePopUp();
+    };
+    const handleDeleteExam = async () => {
+        await apiDeleteExam(id);
+    };
+    const isExamStarted = () => {
+        if (!queryData.data) return false;
+        if (!queryData.data.startedAt) return false;
+        const examStartedAt = new Date(queryData.data.startedAt);
+        return new Date().getTime() > examStartedAt.getTime();
+    };
+    const isExamCancelled = () => {
+        if (!queryData.data) return false;
+        if (queryData.data.cancelledAt) return true;
+        return false;
+    };
+    const { mutate, isPending } = useMutation({
+        mutationFn: handleUpdateExam,
+        onError: (error) => { formUtils.showFormError(error); },
+        onSuccess: onMutateSuccess
+    });
+    useEffect(() => {
+        if (queryData.data) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            setSupervisors(queryData.data.supervisors.map(({ pivot, ...user }) => user));
+        }
+    }, [queryData.data]);
+    useEffect(() => {
+        return () => {
+            queryClient.removeQueries({ queryKey: [QUERY_KEYS.EXAM, { id: id }] });
+            queryClient.removeQueries({ queryKey: [QUERY_KEYS.ALL_TEACHER] });
+        };
+    }, [id, queryClient]);
+    return (
+        <>
+            {showDeletePopUp === true ?
+                <YesNoPopUp
+                    message={language?.deleteMessage || ''}
+                    mutateFunction={handleDeleteExam}
+                    setShowPopUp={setShowDeletePopUp}
+                    onMutateSuccess={() => { onMutateSuccess(); handleClosePopUp(); }}
+                    langYes={language?.langYes}
+                    langNo={language?.langNo}
+                /> : null}
+            <div className={
+                css(
+                    styles.createViewExamContainer,
+                )
+            }>
+                {
+                    queryData.isLoading ? <Loading /> : null
+                }
+                {
+                    isPending ? <Loading /> : null
+                }
+                <div className={
+                    css(
+                        styles.createViewExamForm,
+                    )
+                }>
+                    <div className={styles.header}>
+                        <h2 className={styles.title}>{language?.exam}</h2>
+                        <div className={styles.escButton}
+                            onClick={handleClosePopUp}
+                        >
+                            <RxCross2 />
+                        </div>
+                    </div>
+                    <div className={styles.formContent}>
+                        {
+                            queryData.data ?
+                                <form
+                                    onSubmit={e => { mutate(e); }}
+                                    className={styles.formData}>
+                                    <div className={styles.groupInputs}>
+                                        <div className={styles.wrapItem}>
+                                            <label className={appStyles.required} htmlFor='name'>{language?.name}</label>
+                                            <input
+                                                id='name'
+                                                name='name'
+                                                defaultValue={queryData.data.name}
+                                                disabled={disabledUpdate}
+                                                className={css(appStyles.input, styles.inputItem)}
+                                                type='text' />
+                                        </div>
+                                        <div className={styles.wrapItem}>
+                                            <label className={appStyles.required} htmlFor='exam_date'>{language?.examDate}</label>
+                                            <input
+                                                defaultValue={dateFormat.toDateTimeMinuteString(new Date(queryData.data.examDate))}
+                                                type='datetime-local'
+                                                name='exam_date'
+                                                id='exam_date'
+                                                disabled={disabledUpdate}
+                                                className={css(appStyles.input, styles.inputItem)}
+                                            />
+                                        </div>
+                                        <div className={styles.wrapItem}>
+                                            <span>Durasi kuis dihitung otomatis berdasarkan tingkat kesulitan soal.</span>
+                                        </div>
+                                        <div className={styles.wrapItem}>
+                                            <label className={appStyles.required} htmlFor='type'>{language?.type || 'Type'}</label>
+                                            <select
+                                                id='type'
+                                                name='type'
+                                                defaultValue={queryData.data.type}
+                                                disabled={disabledUpdate}
+                                                className={css(appStyles.input, styles.inputItem)}
+                                            >
+                                                <option value="regular">{language?.regular || 'Regular'}</option>
+                                                <option value='pretest'>{language?.pretest || 'Pretest'}</option>
+                                                <option value='posttest'>{language?.posttest || 'Posttest'}</option>
+                                            </select>
+                                        </div>
+                                        {
+                                            queryData.data ?
+                                                <>
+                                                    <div className={styles.wrapItem}>
+                                                        <span>{language?.totalQuestions}: {queryData.data.questionsCount}</span>
+                                                    </div>
+                                                    <div className={css(styles.wrapItem, styles.dataContainer)}>
+                                                        {/* <label>{language?.supervisors}</label> */}
+                                                        {
+                                                            permissions.has('user_view') ?
+                                                                <input
+                                                                    placeholder={language?.search}
+                                                                    onInput={e => {
+                                                                        setQueryUser(e.currentTarget.value);
+                                                                    }}
+                                                                    className={css(appStyles.input, styles.inputItem)}
+                                                                    type='text' />
+                                                                : null
+                                                        }
+                                                        <label>{language?.supervisors}</label>
+                                                        <ul className={styles.joinedSupervisorsContainer}>
+                                                            {
+                                                                supervisors.map((supervisor, index) => {
+                                                                    return (
+                                                                        <li
+                                                                            className={styles.joinedSupervisor}
+                                                                            key={`joined-supervisor-${supervisor.id}`}
+                                                                        >
+                                                                            <div>
+                                                                                <span>
+                                                                                    {languageUtils.getFullName(supervisor.firstName, supervisor.lastName)}
+                                                                                </span>
+                                                                                {/* <span>
+																			{supervisor.faculty?.name}
+																		</span> */}
+                                                                                <span
+                                                                                    style={{ height: '20px' }}
+                                                                                    onClick={() => {
+                                                                                        if (!permissions.has('exam_update')) return;
+                                                                                        const newSupervisors = structuredClone(supervisors);
+                                                                                        newSupervisors.splice(index, 1);
+                                                                                        setSupervisors(newSupervisors);
+                                                                                    }}
+                                                                                >
+                                                                                    <RxCross2 />
+                                                                                </span>
+                                                                            </div>
+                                                                        </li>
+                                                                    );
+                                                                })
+                                                            }
+                                                        </ul>
+                                                        {
+                                                            permissions.has('user_view') ?
+                                                                <>
+                                                                    <label>{language?.allSupervisors}</label>
+                                                                    <ul className={styles.allSupervisorConatiner}>
+                                                                        {userQueryData.data ?
+                                                                            userQueryData.data
+                                                                                .filter(user => !supervisors.find(supervisor => supervisor.id === user.id))
+                                                                                .map(user => (
+                                                                                    <li
+                                                                                        onClick={() => {
+                                                                                            const newSupervisors = structuredClone(supervisors);
+                                                                                            newSupervisors.push(user);
+                                                                                            setSupervisors(newSupervisors);
+                                                                                        }}
+                                                                                        className={css(appStyles.dashboardCard, styles.card)}
+                                                                                        key={`user-${user.id}`}
+                                                                                    >
+                                                                                        <div className={styles.cardLeft}>
+                                                                                            <span>{languageUtils.getFullName(user.firstName, user.lastName)}</span>
+                                                                                            <span>{user.faculty?.name}</span>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                )) : null
+                                                                        }
+                                                                    </ul>
+                                                                </> : null
+                                                        }
+                                                    </div>
+                                                </> : null
+                                        }
+                                    </div>
+                                    <div className={styles.actionItems}>
+                                        <button
+                                            type='button'
+                                            className={
+                                                css(
+                                                    appStyles.actionItemWhite,
+                                                )
+                                            }
+                                        >
+                                            <Link to={`/exams/${queryData.data.id}`}>{language?.viewInExamsPage}</Link>
+                                        </button>
+                                        {
+                                            permissions.has('exam_update') && !isExamStarted() && !isExamCancelled() ?
+                                                <button name='save'
+                                                    className={
+                                                        css(
+                                                            appStyles.actionItem,
+                                                            isPending ? appStyles.buttonSubmitting : ''
+                                                        )
+                                                    }
+                                                ><FiSave />{language?.save}
+                                                </button> : null
+                                        }
+                                        {
+                                            permissions.has('exam_delete') && !isExamStarted() && !isExamCancelled() ?
+                                                <button
+                                                    type='button'
+                                                    onClick={() => {
+                                                        setShowDeletePopUp(true);
+                                                    }}
+                                                    className={appStyles.actionItemWhiteBorderRed}>
+                                                    <MdDeleteOutline /> {language?.delete}
+                                                </button> : null
+                                        }
+                                    </div>
+                                </form>
+                                : null
+                        }
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}

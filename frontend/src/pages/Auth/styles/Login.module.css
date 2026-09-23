@@ -1,0 +1,208 @@
+.loginPage {
+    width: 100%;
+    height: calc(100% - (75px));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-background);
+}
+
+.form {
+    max-width: 350px;
+    width: 80%;
+    min-height: 240px;
+    height: fit-content;
+    border-radius: var(--border-radius-medium);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 0px 10px var(--color-shadow);
+}
+
+.wrapInput {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input {
+    width: 100%;
+    height: 40px;
+}
+
+.forgotPassword {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.submit {
+    width: 100%;
+    height: 40px;
+    position: relative;
+}
+
+.submit.submitting,
+.submit.blocking {
+    opacity: 0.7;
+    cursor: default;
+    pointer-events: none;
+}
+
+.submit.submitting:after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 4px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: loading-spinner 1s ease infinite;
+}
+
+@keyframes loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcomePopup {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    animation: fadeIn 0.3s ease-out !important;
+}
+
+.welcomeContent {
+    background-color: white !important;
+    padding: 40px !important;
+    border-radius: 15px !important;
+    text-align: center !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    max-width: 500px !important;
+    width: 90% !important;
+    animation: slideIn 0.5s ease-out !important;
+    position: relative !important;
+}
+
+.welcomeContentSmall {
+    background-color: white;
+    padding: 16px 10px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    max-width: 280px;
+    width: 96%;
+    animation: slideIn 0.5s ease-out;
+    position: relative;
+}
+
+.rulesList {
+    text-align: left;
+    margin: 0 0 8px 0;
+    padding-left: 18px;
+    font-size: 14px;
+    color: #444;
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb #f5f5f5;
+}
+
+.rulesList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.rulesList::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+}
+
+.rulesList::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.welcomeImage {
+    max-width: 300px !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+    display: block !important;
+    animation: fadeIn 0.7s ease-out !important;
+}
+
+.welcomeTitle {
+    color: #333 !important;
+    margin-bottom: 10px !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+}
+
+.welcomeMessage {
+    color: #666 !important;
+    font-size: 16px !important;
+    margin: 0 0 20px 0 !important;
+    line-height: 1.5 !important;
+}
+
+.welcomeButton {
+    margin-top: 5px !important;
+    padding: 14px 0 !important;
+    background-color: #007acc !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    width: 100% !important;
+    transition: background-color 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    letter-spacing: 0.5px;
+}
+
+.welcomeButton:hover {
+    background-color: #005999 !important;
+}

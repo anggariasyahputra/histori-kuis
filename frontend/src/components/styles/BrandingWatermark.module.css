@@ -1,0 +1,11 @@
+.watermark {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: min(55vw, 620px);
+    opacity: .14;
+    filter: grayscale(.25) contrast(1.05);
+}
