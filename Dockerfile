@@ -1,34 +1,20 @@
 # Build Client Stage
 FROM node:alpine AS node-builder
 WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm install
 COPY frontend .
 RUN cp -n .env.example .env && \
-    npm install && npm run build
+    npm run build
 
 # Laravel Stage
 FROM php:8.2-fpm-alpine AS php-laravel
 
-RUN apk add --no-cache \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libxpm-dev \
-    icu-dev \
-    libxml2-dev \
-    libzip-dev \
-    oniguruma-dev \
-    zlib-dev \
-    nginx \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install -j$(nproc) gd intl opcache pdo pdo_mysql zip ftp
+# Install pre-compiled PHP extensions & Nginx (much faster than compiling from source)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Redis extension
-RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del pcre-dev ${PHPIZE_DEPS} \
-    && rm -rf /tmp/pear
+RUN apk add --no-cache nginx \
+    && install-php-extensions gd intl opcache pdo_mysql zip ftp redis
 
 WORKDIR /var/www/college-quiz-app
 COPY backend .
