@@ -1,11 +1,12 @@
 # Build Client Stage
 FROM node:alpine AS node-builder
 WORKDIR /app
+ENV NODE_OPTIONS="--max-old-space-size=1536"
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend .
 RUN cp -n .env.example .env && \
-    npm run build
+    npx vite build
 
 # Laravel Stage
 FROM php:8.2-fpm-alpine AS php-laravel
