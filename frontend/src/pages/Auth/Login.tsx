@@ -73,8 +73,15 @@ export default function Login() {
             } else {
                 setErrorMessage('Email atau password salah.');
             }
-        } catch (error) {
-            setErrorMessage('Terjadi kesalahan pada server.');
+        } catch (error: any) {
+            const serverMessage = error?.response?.data?.message;
+            if (serverMessage === 'Password incorrect') {
+                setErrorMessage('Password salah.');
+            } else if (serverMessage === 'Email not found') {
+                setErrorMessage('Email tidak ditemukan.');
+            } else {
+                setErrorMessage(serverMessage || 'Terjadi kesalahan pada server.');
+            }
             console.error('Login failed:', error);
         } finally {
             setBlockSubmit(false);
